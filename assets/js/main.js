@@ -15,8 +15,9 @@
 		if( $('.map-canvas').length > 0) {
 			
 			var geocoder = new google.maps.Geocoder();
-			var address = 'Google New York, 76 Ninth Ave, New York, NY, USA';
-			var contentString = '<div class="map-detail"><strong>Our Office:</strong><p>' + address + '</p></div>';
+			//var address = 'Google New York, 76 Ninth Ave, New York, NY, USA';
+			var address = 'Google Thousand Oaks, 555 Laurie Lane, Thousand Oaks, CA, USA';
+			var contentString = '<div class="map-detail"><strong>My Location:</strong><p>' + address + '</p></div>';
 			
 			geocoder.geocode({'address': address }, function(results, status) {
 				if(status == google.maps.GeocoderStatus.OK) { 
