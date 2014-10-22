@@ -68,25 +68,32 @@
 			$btn.addClass('loading');
 			$btn.attr('disabled', 'disabled');
 
-			$.post('contact.php', $(this).serialize(), function(data){
+			$.ajax({
+				type: 'GET',
+				crossDomain: true,
+				dataType: 'jsonp',
+				url: 'http://powerful-inlet-4316.herokuapp.com/', 
+				// url: 'http://localhost:5000/', 
+				data: $(this).serialize(), 
+				success: function(data){
 				
-				$message = data.message;
-				
-				if( data.result == true ){
-					$theForm.slideUp('medium', function() {
-						$alert.removeClass('alert-danger');
-						$alert.addClass('alert-success').html($message).slideDown('medium');	
-					});				
-				}else {
-					$alert.addClass('alert-danger').html($message).slideDown('medium');	
-				}
+					$message = data.message;
+					
+					if( data.result == true ){
+						$theForm.slideUp('medium', function() {
+							$alert.removeClass('alert-danger');
+							$alert.addClass('alert-success').html($message).slideDown('medium');	
+						});				
+					}else {
+						$alert.addClass('alert-danger').html($message).slideDown('medium');	
+					}
 
-				$btn.removeClass('loading');
-				$btn.removeAttr('disabled');
+					$btn.removeClass('loading');
+					$btn.removeAttr('disabled');
+				},
+				fail: function() { console.log('AJAX Error'); }
 
-			})
-			.fail(function() { console.log('AJAX Error'); });
-
+			});
 		});
 
 	});
