@@ -9546,6 +9546,13 @@ ul.social-icons .icon:hover {
     -o-transform: scale(0.4);
     transform: scale(0.4);
   }
+  .project-effect-shrink figure.small-fig:hover img {
+    -webkit-transform: scale(0.0);
+    -moz-transform: scale(0.0);
+    -ms-transform: scale(0.0);
+    -o-transform: scale(0.0);
+    transform: scale(0.0);
+  }
   .project-effect-shrink figure:hover figcaption {
     filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
     opacity: 1;
@@ -9573,6 +9580,9 @@ ul.social-icons .icon:hover {
     padding: 7px 12px;
     font-size: 0.8em;
     color: #c1d7f5;
+  }
+  .project-effect-shrink figure.small-fig .project-item-info a {
+    position: initial;
   }
   .project-effect-shrink figcaption {
     filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
