@@ -1,0 +1,19 @@
+.container {
+	margin: 0 auto;
+	max-width: 960px;
+}
+
+.thoughts {
+	margin-top: 50px;
+	margin-left: 70px;
+}
+
+.thought {
+	margin-bottom: 50px;
+}
+
+.thought-title {
+	font-size: 2em;
+	font-weight: bold;
+	text-transform: uppercase;
+}
