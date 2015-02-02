@@ -6,13 +6,15 @@ categories: jekyll update
 ---
 The point of this post is to explore Same-Origin Policy (SOP) in modern web browsers by making assumptions based on the documentation (https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy) and performing experiments. The feature was introduced in Netscape Navigator some 20 years ago in order to protect sensitive webcontent from malicious scripts. It uses Origin that is a combination of scheme (http, https, file etc.), domain and port. And the idea is that script can access web content's DOM only from the same origin and manipulate it. It's applied to accessibility of iframes, child windows and out-of-browser communications like XHR requests, the last one is tricky and I'm going to explore it in a separate post.
 
-There are three chapters in this post:
-I. Using `<script>` element to include foreign code
+There are several chapters in this post:
+I. Access DOM from a foreign code included using `<script>` element
 II. Access DOM of a child frame (iframe and new window)
-III. postMessaging in web browsers
+III. `postMessaging` in web browsers (iframe and new window)
+IV. Exploring limits of `postMessaging` in web browsers (iframe only)
+V. Conclusions
 
-I. Using `<script>` element to include foreign code
----------------------------------------------------
+I. Access DOM from a foreign script
+-----------------------------------
 The experiment was to try to access DOM from the script that's hosted from different origin. We have two files here: main page and script that is included in the main page.
 
 main page (that is hosted on `http://host1.dev:8080`):
@@ -39,12 +41,12 @@ service.js started
 <h1>Hello, world!</h1>
 {% endhighlight %}
 
-The output implies that the script has access to the DOM. I was confused by this because the SOP specification says that script from different origin can not access the DOM, but it definitely can in our example.
+The output implies that the script has access to the DOM. I was confused by this because the SOP specification says that script from different origin can not access the DOM, but it's definitely opposite in our example.
 
-Actually Same-Origin Policy is not applied to `<script>` tag as well as `<img>` and others because that's responsibility of the website owner to be careful about what content is included into the webpage or at least that's W3C's philosophy. So let's explore in what cases SOP is applied
+As it turned out Same-Origin Policy is not applied to `<script>` as well as `<img>` and others because that's responsibility of the website owner to be careful about what content is included into the webpage or at least that's W3C's philosophy. So let's explore in what cases SOP is applied.
 
-II. Access DOM of a child frame (iframe and new window)
--------------------------------------------------------
+II. Access DOM of a child frame
+-------------------------------
 In this experiment we'll create an iframe and new window with a content from the same origin and from the different origin and we'll see how browser restricts access in this case. We have two files that contain main page content and iframe's content.
 
 ## II.a. iframe
@@ -285,10 +287,7 @@ output to console:
 [main] message received:  MessageEvent {ports: Array[0], data: "test response from iframe", source: Window, lastEventId: "", origin: "http://host2.dev:8081"…}
 [main] delta is  17  milliseconds
 {% endhighlight %}
-The output shows that main page and embedded iframe can communicate with each other despite of different origins but they can NOT access each other's DOM as the previous experiment showed. And the communication speed is pretty fast: delta between sending a `postMessage` to iframe and receiving response is 17ms for Google Chrome 40 and 6ms for MSIE 10 WTF! 
-
-But how broad is the channel?
------------------------------
+The output shows that main page and embedded iframe can communicate with each other despite of different origins but they can NOT access each other's DOM as the previous experiment showed. And the communication speed is pretty fast: delta between sending a `postMessage` to iframe and receiving response is 17ms for Google Chrome 40 and 6ms for MSIE 10 WTF! The performance will be explored in the next chapter.
 
 `postMessaging` with iframes is supported by all the major browsers (http://caniuse.com/#search=postmessage). Our next goal is to test it with a new window.
 
@@ -349,13 +348,60 @@ output to main page's console:
 {% endhighlight %}
 output to new window's console:
 {% highlight html %}
-[newwin] message received: -> MessageEvent
+[newwin] message received:  MessageEvent {ports: Array[0], data: "test message from parent", source: Window, lastEventId: "", origin: "http://host1.dev:8080"…}
 [newwin] response has been sent back
 {% endhighlight %}
-The output shows that main page and new window can communicate with each other despite of separated browser tabs and different origins but they can NOT access each other's DOM as the previous experiment showed. And the communication speed is still pretty fast: delta between sending a `postMessage` to iframe and receiving response is 7ms for Google Chrome 40 and 5ms for MSIE 10. `postMessaging` works fine even between separated windows and different origins.
+The output shows that main page and new window can communicate with each other despite of separated browser tabs and different origins but they can NOT access each other's DOM as the previous experiment showed. And the communication speed is still pretty fast: delta between sending a `postMessage` to iframe and receiving response is 12ms for Google Chrome 40 and 5ms for MSIE 10. `postMessaging` works fine even between separated windows and different origins. The performance will be explored in the next chapter.
 
-But how broad is the channel?
------------------------------
+V. Exploring limits of postMessaging in web browsers
+----------------------------------------------------
+{% highlight html %}
+<html>
+	<head>
+	</head>
+	<body>
+		<h1>Main page</h1>
+		<iframe src="http://host2.dev:8081/iframe.html"></iframe>
+		<script>
+			var startTime, endTime;
+			var dataSize = 100; // data has dataSize*dataSize integer elements
+			var data = [];
 
-`postMessaging` with iframes is supported by all the major browsers (http://caniuse.com/#search=postmessage). Our next goal is to test it with a new window.
+			for (var i = 0; i < dataSize; i++) {
+				data[i] = [];
+				for (var j = 1; j < dataSize; j++)
+					data[i][j] = (i + j) * (i + j - 11);
+			}
 
+			window.addEventListener('message', function (event) {
+				console.log('[main] message received: ', event);
+				endTime = new Date().getTime();
+				console.log('[main] delta is ', endTime - startTime, ' milliseconds');
+			});
+
+			setTimeout(function () {
+				var iframe = document.querySelector('iframe');
+				startTime = new Date().getTime();
+				iframe.contentWindow.postMessage(data, '*');
+				console.log('[main] message has been sent');
+			}, 1000);
+		</script>
+	</body>
+</html>
+{% endhighlight %}
+{% highlight html %}
+<html>
+	<head>
+	</head>
+	<body>
+		<h2>This is embedded iframe</h2>
+		<script>
+			window.addEventListener('message', function (event) {
+				console.log('[iframe] message received: ', event);
+				parent.window.postMessage(event.data, '*');
+				console.log('[iframe] echo has been sent back');
+			});
+		</script>
+	</body>
+</html>
+{% endhighlight %}
