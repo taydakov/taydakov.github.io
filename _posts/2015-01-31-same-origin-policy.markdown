@@ -4,14 +4,21 @@ title:  "Same-Origin Policy"
 date:   2015-01-31 18:07:02
 categories: jekyll update
 ---
-The point of this post is to explore Same-Origin Policy (SOP) in modern web browsers by making assumptions based on the documentation (https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy) and performing experiments. The feature was introduced in Netscape Navigator some 20 years ago in order to protect sensitive webcontent from malicious scripts. It uses Origin that is a combination of scheme (http, https, file etc.), domain and port. And the idea is that script can access web content's DOM only from the same origin and manipulate it. It's applied to accessibility of iframes, child windows and out-of-browser communications like XHR requests, the last one is tricky and I'm going to explore it in a separate post.
+This post is exploring Same-Origin Policy (SOP) in modern web browsers by making assumptions based on the documentation (https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy), performing experiments to test those assumptions and adjusting understanding of SOP.
+
+SOP was introduced in Netscape Navigator some 20 years ago in order to protect sensitive webcontent from malicious scripts. It uses the term Origin that is a combination of scheme (http, https, file etc.), domain and port. And the idea is that script can access web content's DOM only from the same origin and can manipulate it. It's applied to accessibility of iframes, child windows and out-of-browser communications as well like XHR requests, the last one is tricky and I'd like to explore it in a separate post.
 
 There are several chapters in this post:
-I. Access DOM from a foreign code included using `<script>` element
-II. Access DOM of a child frame (iframe and new window)
-III. `postMessaging` in web browsers (iframe and new window)
-IV. Exploring limits of `postMessaging` in web browsers (iframe only)
-V. Conclusions
+
+* I. Access DOM from a foreign code included using `<script>` element
+
+* II. Access DOM of a child frame (iframe and new window)
+
+* III. `postMessaging` in web browsers (iframe and new window)
+
+* IV. Exploring limits of `postMessaging` in web browsers (iframe only)
+
+* V. Conclusions
 
 I. Access DOM from a foreign script
 -----------------------------------
@@ -353,7 +360,7 @@ output to new window's console:
 {% endhighlight %}
 The output shows that main page and new window can communicate with each other despite of separated browser tabs and different origins but they can NOT access each other's DOM as the previous experiment showed. And the communication speed is still pretty fast: delta between sending a `postMessage` to iframe and receiving response is 12ms for Google Chrome 40 and 5ms for MSIE 10. `postMessaging` works fine even between separated windows and different origins. The performance will be explored in the next chapter.
 
-V. Exploring limits of postMessaging in web browsers
+IV. Exploring limits of postMessaging in web browsers
 ----------------------------------------------------
 {% highlight html %}
 <html>
@@ -405,3 +412,7 @@ V. Exploring limits of postMessaging in web browsers
 	</body>
 </html>
 {% endhighlight %}
+
+V. Conclusions
+---------------
+SOP protects content of a wepsite from different frames by restricting access only to scripts from the same origin as the website and simultaneously it prevents foreign scripts to participate in user interaction, it makes things safer but more compicated to implement. Browsers came up with an idea to keep security on a satisfactory level but allow frames to communicate with each other: `postMessaging`. This mechanism is well-implemented, easy to use and is supported by all the major browsers including IE10, ready for production.
