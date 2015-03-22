@@ -360,59 +360,6 @@ output to new window's console:
 {% endhighlight %}
 The output shows that main page and new window can communicate with each other despite of separated browser tabs and different origins but they can NOT access each other's DOM as the previous experiment showed. And the communication speed is still pretty fast: delta between sending a `postMessage` to iframe and receiving response is 12ms for Google Chrome 40 and 5ms for MSIE 10. `postMessaging` works fine even between separated windows and different origins. The performance will be explored in the next chapter.
 
-IV. Exploring limits of postMessaging in web browsers
-----------------------------------------------------
-{% highlight html %}
-<html>
-	<head>
-	</head>
-	<body>
-		<h1>Main page</h1>
-		<iframe src="http://host2.dev:8081/iframe.html"></iframe>
-		<script>
-			var startTime, endTime;
-			var dataSize = 100; // data has dataSize*dataSize integer elements
-			var data = [];
-
-			for (var i = 0; i < dataSize; i++) {
-				data[i] = [];
-				for (var j = 1; j < dataSize; j++)
-					data[i][j] = (i + j) * (i + j - 11);
-			}
-
-			window.addEventListener('message', function (event) {
-				console.log('[main] message received: ', event);
-				endTime = new Date().getTime();
-				console.log('[main] delta is ', endTime - startTime, ' milliseconds');
-			});
-
-			setTimeout(function () {
-				var iframe = document.querySelector('iframe');
-				startTime = new Date().getTime();
-				iframe.contentWindow.postMessage(data, '*');
-				console.log('[main] message has been sent');
-			}, 1000);
-		</script>
-	</body>
-</html>
-{% endhighlight %}
-{% highlight html %}
-<html>
-	<head>
-	</head>
-	<body>
-		<h2>This is embedded iframe</h2>
-		<script>
-			window.addEventListener('message', function (event) {
-				console.log('[iframe] message received: ', event);
-				parent.window.postMessage(event.data, '*');
-				console.log('[iframe] echo has been sent back');
-			});
-		</script>
-	</body>
-</html>
-{% endhighlight %}
-
 V. Conclusions
 ---------------
 SOP protects content of a wepsite from different frames by restricting access only to scripts from the same origin as the website and simultaneously it prevents foreign scripts to participate in user interaction, it makes things safer but more compicated to implement. Browsers came up with an idea to keep security on a satisfactory level but allow frames to communicate with each other: `postMessaging`. This mechanism is well-implemented, easy to use and is supported by all the major browsers including IE10, ready for production.
