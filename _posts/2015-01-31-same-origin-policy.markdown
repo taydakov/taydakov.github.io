@@ -2,7 +2,7 @@
 layout: post
 title:  "Same-Origin Policy"
 date:   2015-01-31 18:07:02
-categories: jekyll update
+categories: software policy
 ---
 This post is exploring Same-Origin Policy (SOP) in modern web browsers by making assumptions based on the documentation (https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy), performing experiments to test those assumptions and adjusting understanding of SOP.
 
