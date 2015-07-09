@@ -40,3 +40,16 @@ ul.navigation-links li {
 .posts-container {
 	text-align: center;
 }
+
+/* Certificates page */
+.certificates-container {
+	text-align: center;
+}
+.certificates li {
+	display: inline-block;
+	margin: 40px;
+}
+.certificates li img {
+	width: 200px;
+	border: black solid 1px;
+}
