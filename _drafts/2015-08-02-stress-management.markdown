@@ -21,6 +21,10 @@ Routines that prevent getting into depressive state:
  - regular meditation
  - socialization
  
-Being stressed out is a very easy feat especially during moving to a different city. In order to prevent it the next time, follw
+Being stressed out is a very easy feat especially during moving to a different city. In order to prevent it the next time, follow these steps:
+ - find and book a gym that is nearby your new place beforehand
+ - live in shared apartments, rooms where you can meet people that will support you
+ - visit a coworking place where you can hang out with people
+ - and remember why you moved, keep your goals clear and fresh
  
-All of it is from my own experience and it works!
+All of it is from my own experience and it works. Good luck with your adventures!
