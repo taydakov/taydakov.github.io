@@ -1,0 +1,7 @@
+Frontend Architecture
+
+A client from [neurlabs](http://neurlabs.com/) gave me a task to implement web frontend logic for their app, they had API and design ready. I can't describe particular details about the app idea, only technical solutions that I used during development.
+
+The task was to display geo-tagged time-mapped data in a concise way. The data also has parameters that can be filtered upon, UI is supposed to provide appropriate data filters for user.
+
+The app design looked similar to this:

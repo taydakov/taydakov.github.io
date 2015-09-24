@@ -1,0 +1,3 @@
+How would you measure user traction on your website? Is it clicks, registrations? Or may be pageviews or bounce rate?
+Whereas those metrics seem legit they don't provide so important insights about your users. Eric Ries, the founder of Lean Startup movement, calls them "vanity metrics". He teaches that metrics should be actionable, they must provide information that directs your decision making unambiguously.
+For example, let's take amount of clicks users make each hour/day/week. What does this information tell you about users? Not much more than their daily/weekly activity cycle. Or you can prove to yourself that ads you posted is working fine by seeing the clicks amount is going up,
