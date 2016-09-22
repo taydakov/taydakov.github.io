@@ -16,7 +16,7 @@
 			
 			var geocoder = new google.maps.Geocoder();
 			//var address = 'Google New York, 76 Ninth Ave, New York, NY, USA';
-			var address = 'Google Thousand Oaks, 555 Laurie Lane, Thousand Oaks, CA, USA';
+			var address = 'San Francisco, CA';
 			var contentString = '<div class="map-detail"><strong>My Location:</strong><p>' + address + '</p></div>';
 			
 			geocoder.geocode({'address': address }, function(results, status) {
