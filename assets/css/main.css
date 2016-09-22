@@ -9255,11 +9255,11 @@ a:hover, a:focus {
 }
 .avatar img {
   /* we can't use percentage value for image with border-radius */
-  -webkit-border-radius: 225px;
-  -moz-border-radius: 225px;
-  -ms-border-radius: 225px;
-  -o-border-radius: 225px;
-  border-radius: 225px;
+  -webkit-border-radius: 487px;
+  -moz-border-radius: 487px;
+  -ms-border-radius: 487px;
+  -o-border-radius: 487px;
+  border-radius: 487px;
   width: 100%;
   margin: 0 auto;
 }
